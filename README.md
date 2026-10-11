@@ -1,5 +1,3 @@
-# crownedge-website
-CrownEdge website
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,8 +100,19 @@ CrownEdge website
     }
   </style>
 </head>
-
 <body>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  const SUPABASE_URL = 'https://zaqfcgqxpbsdevocfiom.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_K16tkWqfwGVCUCY3nMZ2VQ_m07Viwunp';
+
+  window.supabaseClient = createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+</script>
 
   <header>
     <div class="logo">CROWNEDGE</div>
@@ -141,7 +150,45 @@ CrownEdge website
         involved in trading.
       </p>
     </section>
-
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const supabase = window.supabaseClient;
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const message = document.getElementById('accountMessage');
+document.getElementById('signupBtn').addEventListener('click', async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  if (!email || password.length < 6) {
+    message.textContent = 'Enter a valid email and a password of at least 6 characters.';
+    return;
+  }
+  message.textContent = 'Creating account...';
+  const { error } = await supabase.auth.signUp({
+    email,
+    password
+  });
+  message.textContent = error
+    ? error.message
+    : 'Signup submitted. Check your email to confirm your account.';
+});
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  if (!email || !password) {
+    message.textContent = 'Enter your email and password.';
+    return;
+  }
+  message.textContent = 'Logging in...';
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+  message.textContent = error
+    ? error.message
+    : 'You are logged in successfully.';
+});
+</script>
     <section id="services">
       <h2>Our Services</h2>
       <p>
@@ -157,6 +204,18 @@ CrownEdge website
         for information about our services.
       </p>
     </section>
+  <section id="account" style="max-width:420px;margin:30px auto;padding:24px;background:#102033;color:white;border:1px solid #bdc8d8;border-radius:12px;">
+  <h2 style="color:#d4af37;text-align:center;">CrownEdge Account</h2>
+  <form id="accountForm">
+    <label for="email">Email address</label>
+    <input id="email" type="email" required placeholder="Enter your email" style="box-sizing:border-box;width:100%;padding:12px;margin:8px 0 16px;">
+    <label for="password">Password</label>
+    <input id="password" type="password" required minlength="6" placeholder="At least 6 characters" style="box-sizing:border-box;width:100%;padding:12px;margin:8px 0 16px;">
+    <button type="button" id="signupBtn" style="padding:12px;background:#d4af37;color:#111;border:0;border-radius:6px;">Sign Up</button>
+    <button type="button" id="loginBtn" style="padding:12px;background:#fff;color:#111;border:0;border-radius:6px;">Log In</button>
+    <p id="accountMessage" role="status"></p>
+  </form>
+</section>
   </main>
 
   <footer>
@@ -174,7 +233,7 @@ window.smartsupp||(function(d) {
   c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
 })(document);
 </script>
-<script>Powered by <a href="https://www.smartsupp.com" target="_blank">Smartsupp</a></script>
+<noscript>Powered by <a href="https://www.smartsupp.com" target="_blank">Smartsupp</a></noscript>
 
 </body>
 </html>
